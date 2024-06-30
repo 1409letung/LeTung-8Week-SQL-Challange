@@ -14,15 +14,15 @@ GROUP BY s.customer_id
 ORDER BY s.customer_id ASC;
 ````
 # Q2. How many days has each customer visited the restaurant?
-
+````sql
 SELECT 
     s.customer_id, 
     COUNT(DISTINCT s.order_date) AS visit_count
 FROM sales s
 GROUP BY s.customer_id;
-
+````
 # Q3. What was the first item from the menu purchased by each customer?
-
+````sql
 WITH ordered_sales AS (
   SELECT 
     s.customer_id, 
@@ -42,9 +42,9 @@ SELECT
 FROM ordered_sales
 WHERE rank = 1
 GROUP BY customer_id, product_name;
-
+````
 # Q4. What is the most purchased item on the menu and how many times was it purchased by all customers?
-
+````sql
 SELECT
     m.product_id, 
     m.product_name, 
@@ -55,9 +55,9 @@ FROM menu m
 GROUP BY m.product_id
 ORDER BY number_of_purchases DESC
 LIMIT 1;
-
+````
 # Q5. Which item was the most popular for each customer?
-
+````sql
 WITH ordered_sales AS (
   SELECT 
     s.customer_id, 
@@ -77,9 +77,9 @@ SELECT
 FROM ordered_sales
 WHERE rank = 1
 GROUP BY customer_id, product_name;
-
+````
 # Q6. Which item was purchased first by the customer after they became a member?
-
+````sql
 WITH joined_as_member AS (
   SELECT
     m.customer_id, 
@@ -101,9 +101,9 @@ FROM joined_as_member j
         ON j.product_id = m.product_id
 WHERE row_num = 1
 ORDER BY customer_id ASC;
-
+````
 # Q7. Which item was purchased just before the customer became a member?
-
+````sql
 WITH purchased_prior_member AS (
   SELECT 
     m.customer_id, 
@@ -125,9 +125,9 @@ FROM purchased_prior_member p
         ON p.product_id = m.product_id
 WHERE rank = 1
 ORDER BY p.customer_id ASC;
-
+````
 # Q8. What is the total items and amount spent for each member before they became a member?
-
+````sql
 SELECT 
   s.customer_id, 
   COUNT(s.product_id) AS total_items, 
@@ -140,9 +140,9 @@ FROM sales s
         ON s.product_id = mn.product_id
 GROUP BY s.customer_id
 ORDER BY s.customer_id;
-
+````
 # Q9. If each $1 spent equates to 10 points and sushi has a 2x points multiplier — how many points would each customer have?
-
+````sql
 WITH points_cte AS (
   SELECT 
     product_id, 
@@ -160,9 +160,9 @@ FROM sales s
         ON s.product_id = p_cte.product_id
 GROUP BY s.customer_id
 ORDER BY s.customer_id;
-
+````
 # Q10: In the first week after a customer joins the program (including their join date) they earn 2x points on all items, not just sushi — how many points do customer A and B have at the end of January?
-
+````sql
 WITH dates_cte AS (
   SELECT 
     customer_id, 
@@ -191,4 +191,4 @@ FROM sales s
     INNER JOIN menu mn
         ON s.product_id = mn.product_id
 GROUP BY sales.customer_id;
-
+````
